@@ -1,0 +1,224 @@
+from datetime import datetime
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
+from src.schemas import (
+    Genre,
+    ProductionCompany,
+    BelongsToCollection,
+    ProductionCountry,
+    SortBy,
+    SpokenLanguage,
+    Movie,
+)
+
+
+class DiscoverMovieInput(BaseModel):
+    certification: Optional[str] = Field(
+        default=None, description="Filter by certification rating (use with region)"
+    )
+    certification_gte: Optional[str] = Field(
+        default=None,
+        alias="certification.gte",
+        description="Filter certifications greater than or equal (use with region)",
+    )
+    certification_lte: Optional[str] = Field(
+        default=None,
+        alias="certification.lte",
+        description="Filter certifications less than or equal (use with region)",
+    )
+    certification_country: Optional[str] = Field(
+        default=None, description="Country for certification filters"
+    )
+
+    include_adult: bool = Field(
+        default=False, description="Include adult (NSFW) content"
+    )
+    include_video: bool = Field(default=False, description="Include videos")
+
+    language: str = Field(
+        default="en-US", description="Language for results (ISO format)"
+    )
+    page: int = Field(default=1, description="Page number for pagination")
+
+    primary_release_year: Optional[int] = Field(
+        default=None, description="Filter by primary release year"
+    )
+    primary_release_date_gte: Optional[datetime] = Field(
+        default=None,
+        alias="primary_release_date.gte",
+        description="Primary release date greater than or equal",
+    )
+    primary_release_date_lte: Optional[datetime] = Field(
+        default=None,
+        alias="primary_release_date.lte",
+        description="Primary release date less than or equal",
+    )
+
+    region: Optional[str] = Field(
+        default=None, description="Filter by region (ISO 3166-1 code)"
+    )
+    release_date_gte: Optional[datetime] = Field(
+        default=None,
+        alias="release_date.gte",
+        description="Release date greater than or equal",
+    )
+    release_date_lte: Optional[datetime] = Field(
+        default=None,
+        alias="release_date.lte",
+        description="Release date less than or equal",
+    )
+
+    sort_by: SortBy = Field(
+        default=SortBy.popularity_desc,
+        description="Sort results by field and direction",
+    )
+
+    vote_average_gte: Optional[float] = Field(
+        default=None, alias="vote_average.gte", description="Minimum vote average"
+    )
+    vote_average_lte: Optional[float] = Field(
+        default=None, alias="vote_average.lte", description="Maximum vote average"
+    )
+    vote_count_gte: Optional[float] = Field(
+        default=None, alias="vote_count.gte", description="Minimum vote count"
+    )
+    vote_count_lte: Optional[float] = Field(
+        default=None, alias="vote_count.lte", description="Maximum vote count"
+    )
+
+    watch_region: Optional[str] = Field(
+        default=None, description="Region for watch provider filters"
+    )
+
+    with_cast: Optional[str] = Field(
+        default=None, description="Filter by cast (comma=AND, pipe=OR)"
+    )
+    with_companies: Optional[str] = Field(
+        default=None, description="Filter by production companies (comma=AND, pipe=OR)"
+    )
+    with_crew: Optional[str] = Field(
+        default=None, description="Filter by crew (comma=AND, pipe=OR)"
+    )
+    with_genres: Optional[str] = Field(
+        default=None, description="Filter by genres (comma=AND, pipe=OR)"
+    )
+    with_keywords: Optional[str] = Field(
+        default=None, description="Filter by keywords (comma=AND, pipe=OR)"
+    )
+    with_origin_country: Optional[str] = Field(
+        default=None, description="Filter by origin country"
+    )
+    with_original_language: Optional[str] = Field(
+        default=None, description="Filter by original language"
+    )
+    with_people: Optional[str] = Field(
+        default=None, description="Filter by people (comma=AND, pipe=OR)"
+    )
+
+    with_release_type: Optional[str] = Field(
+        default=None,
+        description="Release types [1-6], comma=AND, pipe=OR (use with region)",
+    )
+
+    with_runtime_gte: Optional[int] = Field(
+        default=None, alias="with_runtime.gte", description="Minimum runtime (minutes)"
+    )
+    with_runtime_lte: Optional[int] = Field(
+        default=None, alias="with_runtime.lte", description="Maximum runtime (minutes)"
+    )
+
+    with_watch_monetization_types: Optional[str] = Field(
+        default=None, description="Monetization types [flatrate, free, ads, rent, buy]"
+    )
+    with_watch_providers: Optional[str] = Field(
+        default=None, description="Watch providers (use with watch_region)"
+    )
+
+    without_companies: Optional[str] = Field(
+        default=None, description="Exclude production companies"
+    )
+    without_genres: Optional[str] = Field(default=None, description="Exclude genres")
+    without_keywords: Optional[str] = Field(
+        default=None, description="Exclude keywords"
+    )
+    without_watch_providers: Optional[str] = Field(
+        default=None, description="Exclude watch providers"
+    )
+
+    year: Optional[int] = Field(default=None, description="Filter by release year")
+
+
+class DiscoverMovieResponse(BaseModel):
+    page: int
+    results: list[Movie]
+    total_pages: int
+    total_results: int
+
+
+class PopularMoviesInput(BaseModel):
+    language: str = Field(
+        default="en-US",
+        description="The language to return results in. the code is constructed with an ISO 639-1 language code and an ISO 3166-1 country code, joined by a hyphen. (e.g. en-US). If the specified language doesn't exist, it will default to English (en-US).",
+    )
+    page: int = Field(default=1, description="The page of results to return.")
+    region: Optional[str] = Field(
+        default=None,
+        description="Specify a ISO 3166-1 code to filter regional results. Must be uppercase. (e.g. US)",
+    )
+
+
+class PopularMoviesOutput(BaseModel):
+    page: int
+    results: list[Movie]
+
+
+class MovieDetailsInput(BaseModel):
+    movie_id: int = Field(description="The ID of the movie to retrieve details for.")
+
+    append_to_response: Optional[str] = Field(
+        default=None,
+        description="comma separated list of endpoints within this namespace, 20 items max, to append to the result. See https://developers.themoviedb.org/3/getting-started/append-to-response for more details.",
+    )
+    language: str = Field(
+        default="en-US",
+        description="The language to return results in. the code is constructed with an ISO 639-1 language code and an ISO 3166-1 country code, joined by a hyphen. (e.g. en-US). If the specified language doesn't exist, it will default to English (en-US).",
+    )
+
+
+class MovieDetailsOutput(BaseModel):
+    adult: bool
+    backdrop_path: str
+    belongs_to_collection: Optional[BelongsToCollection]
+    budget: int
+    genres: list[Genre]
+    homepage: str
+    id: int
+    imdb_id: str
+    origin_country: list[str]
+    original_language: str
+    original_title: str
+    overview: str
+    popularity: float
+    poster_path: str
+    production_companies: list[ProductionCompany]
+    production_countries: list[ProductionCountry]
+    release_date: str
+    revenue: int
+    runtime: int
+    spoken_languages: list[SpokenLanguage]
+    status: str
+    tagline: str
+    title: str
+    video: bool
+    vote_average: float
+    vote_count: int
+
+
+class GenreMappingInput(BaseModel):
+    language: str = "en"
+
+
+class GenreMappingOutput(BaseModel):
+    genres: list[Genre]
