@@ -12,10 +12,12 @@ class TMDBConfig(BaseSettings):
     def load(cls):
         return cls()
 
+
 class OpenAIConfig(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="OPENAI_")
 
     API_KEY: str = "api_key_not_set"
+    MODEL: str = "gpt-5-nano"
 
     @classmethod
     def load(cls):

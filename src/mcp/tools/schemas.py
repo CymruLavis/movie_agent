@@ -4,13 +4,13 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 from src.schemas import (
-    Genre,
-    ProductionCompany,
     BelongsToCollection,
+    Genre,
+    Movie,
+    ProductionCompany,
     ProductionCountry,
     SortBy,
     SpokenLanguage,
-    Movie,
 )
 
 
@@ -150,7 +150,7 @@ class DiscoverMovieInput(BaseModel):
     year: Optional[int] = Field(default=None, description="Filter by release year")
 
 
-class DiscoverMovieResponse(BaseModel):
+class DiscoverMovieOutput(BaseModel):
     page: int
     results: list[Movie]
     total_pages: int

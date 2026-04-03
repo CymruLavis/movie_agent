@@ -1,15 +1,12 @@
-from src.config import TMDBConfig
 import httpx
 
+from src.config import TMDBConfig
 from src.mcp.tools.schemas import (
     DiscoverMovieInput,
-    DiscoverMovieResponse,
     GenreMappingInput,
     GenreMappingOutput,
     MovieDetailsInput,
-    MovieDetailsOutput,
     PopularMoviesInput,
-    PopularMoviesOutput,
 )
 
 
@@ -39,30 +36,27 @@ class TMDBClient:
                     f"HTTP error occurred: {e.response.status_code} - {e.response.text}"
                 )
 
-    async def discover_movie(self, params: DiscoverMovieInput) -> DiscoverMovieResponse:
-        response_data = await self._make_request(
+    async def discover_movie(self, params: DiscoverMovieInput) -> dict:
+        return await self._make_request(
             endpoint="discover/movie", params=params.model_dump(exclude_none=True)
         )
-        return DiscoverMovieResponse.model_validate(response_data)
 
-    async def list_popular_movies(
-        self, params: PopularMoviesInput
-    ) -> PopularMoviesOutput:
-        response_data = await self._make_request(
+    async def list_popular_movies(self, params: PopularMoviesInput) -> dict:
+        return await self._make_request(
             endpoint="movie/popular", params=params.model_dump(exclude_none=True)
         )
-        return PopularMoviesOutput.model_validate(response_data)
 
-    async def get_movie_details(self, params: MovieDetailsInput) -> MovieDetailsOutput:
-        response_data = await self._make_request(
-            endpoint="/movie/", params=params.model_dump(exclude_none=True)
+    async def get_movie_details(self, params: MovieDetailsInput) -> dict:
+        return await self._make_request(
+            endpoint="/movie/{movie_id}".format(movie_id=params.movie_id),
+            params=params.model_dump(exclude_none=True),
         )
-        return MovieDetailsOutput.model_validate(response_data)
 
     async def get_genre_mapping(
         self, input_params: GenreMappingInput
     ) -> GenreMappingOutput:
         response_data = await self._make_request(
-            endpoint="/genre/movie/", params=input_params.model_dump(exclude_none=True)
+            endpoint="/genre/movie/list",
+            params=input_params.model_dump(exclude_none=True),
         )
         return GenreMappingOutput.model_validate(response_data)
