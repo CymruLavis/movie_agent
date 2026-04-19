@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class TMDBConfig(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="TMDB_")
+    model_config = SettingsConfigDict(env_prefix="TMDB_", arbitrary_types_allowed=True)
 
     API_KEY: str = "api_key_not_set"
     API_READ_ACCESS_TOKEN: str = "access_token_not_set"
@@ -14,7 +14,9 @@ class TMDBConfig(BaseSettings):
 
 
 class OpenAIConfig(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="OPENAI_")
+    model_config = SettingsConfigDict(
+        env_prefix="OPENAI_", arbitrary_types_allowed=True
+    )
 
     API_KEY: str = "api_key_not_set"
     MODEL: str = "gpt-5-nano"

@@ -52,11 +52,9 @@ class TMDBClient:
             params=params.model_dump(exclude_none=True),
         )
 
-    async def get_genre_mapping(
-        self, input_params: GenreMappingInput
-    ) -> GenreMappingOutput:
+    async def get_genre_mapping(self, params: GenreMappingInput) -> GenreMappingOutput:
         response_data = await self._make_request(
             endpoint="/genre/movie/list",
-            params=input_params.model_dump(exclude_none=True),
+            params=params.model_dump(exclude_none=True),
         )
         return GenreMappingOutput.model_validate(response_data)

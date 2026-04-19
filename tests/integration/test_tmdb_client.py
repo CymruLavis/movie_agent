@@ -68,7 +68,7 @@ def test_client_connection(get_client):
 
 @pytest.mark.asyncio
 async def test_genre_mapping(get_client, get_genre_mapping):
-    result = await get_client.get_genre_mapping(input_params=get_genre_mapping)
+    result = await get_client.get_genre_mapping(params=get_genre_mapping)
     assert isinstance(result, GenreMappingOutput)
 
 
