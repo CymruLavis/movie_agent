@@ -2,8 +2,7 @@ import httpx
 import pytest
 from dotenv import load_dotenv
 
-from src.clients.tmdb import TMDBClient
-from src.config import TMDBConfig
+from src.dependencies import get_tmdb_client
 from src.mcp.tools.schemas import (
     DiscoverMovieInput,
     DiscoverMovieOutput,
@@ -31,13 +30,8 @@ load_dotenv()
 
 
 @pytest.fixture
-def get_config():
-    return TMDBConfig().load()
-
-
-@pytest.fixture
-def get_client(get_config):
-    return TMDBClient(config=get_config)
+def get_client():
+    return get_tmdb_client()
 
 
 @pytest.fixture

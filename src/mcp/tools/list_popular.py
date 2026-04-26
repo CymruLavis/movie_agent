@@ -1,8 +1,9 @@
-from src.clients import clients
+from src.dependencies import get_tmdb_client
 from src.mcp.tools.schemas import PopularMoviesInput, PopularMoviesOutput
 
 
 async def list_popular_movies(params: PopularMoviesInput) -> PopularMoviesOutput:
+    client = get_tmdb_client()
     return PopularMoviesOutput.model_validate(
-        clients.tmdb.list_popular_movies(params=params)
+        await client.list_popular_movies(params=params)
     )

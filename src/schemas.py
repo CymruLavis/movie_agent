@@ -10,7 +10,7 @@ class Genre(BaseModel):
 
 class Movie(BaseModel):
     adult: bool
-    backdrop_path: str
+    backdrop_path: str | None = None
     genre_ids: list[int]
     id: int
     original_language: str
