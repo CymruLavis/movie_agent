@@ -17,3 +17,6 @@ class OpenAIClient:
         self._model: OpenAIResponsesModel = OpenAIResponsesModel(
             model_name=self._model_name, provider=self._provider
         )
+
+    def get_model(self) -> OpenAIResponsesModel:
+        return self._model
