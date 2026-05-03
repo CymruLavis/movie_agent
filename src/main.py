@@ -1,10 +1,8 @@
 import asyncio
 
-from pydantic_ai.capabilities import AgentNode
+from pydantic_ai.messages import TextPart
 from rich.console import Console
-from pydantic_ai.messages import ToolReturnPart, ModelResponse, TextPart
-from pydantic_ai.agent import CallToolsNode, ModelRequestNode
-from pydantic_graph.nodes import End
+
 from src.dependencies import get_agent
 
 
@@ -18,11 +16,16 @@ async def main():
         if user_input in ["/exit", "/quit"]:
             console.print("Thank you for using the movie reccomendation agent!")
             break
-        async for message in agent.run(input_prompt=user_input, history=converstaion_history):
+        async for message in agent.run(
+            input_prompt=user_input, history=converstaion_history
+        ):
             if message[1]:
-                part = next((part for part in message[0].parts if isinstance(part, TextPart)))
-                converstaion_history.append(message)
+                part = next(
+                    (part for part in message[0].parts if isinstance(part, TextPart))
+                )
+                converstaion_history.append(message[0])
                 console.print(part.content)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

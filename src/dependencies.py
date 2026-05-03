@@ -27,4 +27,5 @@ def get_openai_model():
 
 def get_agent():
     from src.mcp.server import mcp
+
     return MovieAgent(get_openai_model(), mcp=mcp)
